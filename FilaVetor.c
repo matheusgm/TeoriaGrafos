@@ -1,54 +1,65 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N 100 /* Numero maximo de elementos */
+/* nó da lista para armazenar valores reais */
+typedef struct lista Lista;
+struct lista {
+    int info;
+    Lista* prox;
+};
 
 typedef struct fila Fila;
 struct fila{
-    int n; /* Numero de elementos na fila */
-    int ini; /* posição do proximo elemento a ser retirado da fila */
-    int vet[N];
+    Lista* ini;
+    Lista* fim;
 };
 
 Fila* fila_cria(){
-    Fila *f = (Fila*) malloc(sizeof(Fila));
-    f->n = 0; /* inicializa fila como vazia */
-    f->ini = 0; /* escolhe uma posição inicial */
+    Fila* f = (Fila*) malloc(sizeof(Fila));
+    f->ini = f->fim = NULL;
     return f;
 }
 
 void fila_insere(Fila *f, int v){
-    int fim;
-    if(f->n == N){ /* fila cheia: capacidade esgotada */
-        printf("Capacidade da fila estourou!\n");
-        exit(1);
+    Lista* n = (Lista*) malloc(sizeof(Lista));
+    n->info = v; /* armazena informação */
+    n->prox = NULL; /* novo nó passa a ser o último */
+    if (f->fim != NULL){ /* verifica se lista não estava vazia */
+        f->fim->prox = n;
+    } else{ /* fila estava vazia */
+        f->ini = n;
     }
-    /* insere elemento na proxima posição livre */
-    fim = (f->ini+f->n)%N;
-    f->vet[fim] = v;
-    f->n++;
+    f->fim = n;
 }
 
 int fila_vazia(Fila *f){
-    return f->n == 0;
+    return f->ini->prox == NULL;
 }
 
 int fila_retira(Fila *f){
+    Lista* t;
     int v;
-    if(fila_vazia(f)){
-        printf("Fila Vazia!\n");
+    if (fila_vazia(f)){
+        printf("Fila vazia.\n");
         exit(1);
-    }
-    /* retira elemento do inicio */
-    v = f->vet[f->ini];
-    f->ini = (f->ini + 1)%N;
-    f->n--;
+    } /* aborta programa */
+    t = f->ini;
+    v = t->info;
+    f->ini = t->prox;
+    if (f->ini == NULL) /* verifica se fila ficou vazia */
+        f->fim = NULL;
+    free(t);
     return v;
 }
 
 void fila_libera(Fila *f){
+    Lista* q = f->ini;
+    while (q!=NULL) {
+        Lista* t = q->prox;
+        free(q);
+        q = t;
+    }
     free(f);
-    return;
 }
 
 

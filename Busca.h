@@ -14,3 +14,5 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam);
 
 void gerarArquivoArvore(Arvore *arvore, int tam);
 
+void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcacao, int numMarcado);
+

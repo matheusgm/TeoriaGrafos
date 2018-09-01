@@ -99,7 +99,7 @@ int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore,tam);
-//    free(vetorArvore);
+    free(vetorArvore);
 //    free(vetorMarcacao);
     return vetorMarcacao;
 }
@@ -131,6 +131,7 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore,tam);
+    free(vetorArvore);
     return vetorMarcacao;
 }
 

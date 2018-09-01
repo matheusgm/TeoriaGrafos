@@ -24,7 +24,7 @@ Elemento* lst_insere(Elemento *lst, int val){
 void lst_imprime(Elemento *lst){
     Elemento *p;
     for(p = lst; p != NULL; p = p->prox){
-        printf("info = %d\n", p->info);
+        printf(" -> %d", p->info);
     }
 }
 
@@ -51,6 +51,25 @@ void lst_libera(Elemento *lst){
         free(p); /* libera a memoria apontada por p */
         p = t;  /* faz p apontar para o proximo */
     }
+}
+
+Elemento* proximaLista(Elemento *lst){
+    Elemento *p = lst->prox;
+    return p;
+}
+
+int getItem(Elemento *lst){
+    Elemento *p = lst;
+    return p->info;
+}
+
+int getTamanhoLista(Elemento *lst){
+    Elemento *p;
+    int tam = 0;
+    for(p = lst; p != NULL; p = p->prox){
+        tam++;
+    }
+    return tam;
 }
 
 

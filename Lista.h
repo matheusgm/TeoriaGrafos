@@ -17,3 +17,9 @@ Elemento* busca(Elemento *lst, int v);
 
 void lst_libera(Elemento *lst);
 
+Elemento* proximaLista(Elemento *lst);
+
+int getItem(Elemento *lst);
+
+int getTamanhoLista(Elemento *lst);
+

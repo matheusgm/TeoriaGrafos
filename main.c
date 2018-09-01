@@ -185,6 +185,7 @@ void gerarArquivoTempoListaAdjacencia(Vertice *vetorVertice, int numVertices, ch
     long start,end;
     int i;
     int *vetorMarcacao;
+    long somaTempo = 0;
 
     FILE* s = fopen(nomeArquivo, "wb");
     fprintf(s,"Ciclo Tempo\r\n");
@@ -194,6 +195,8 @@ void gerarArquivoTempoListaAdjacencia(Vertice *vetorVertice, int numVertices, ch
         start = getMicrotime();
         vetorMarcacao = BFSListaAdjacencia(vetorVertice,1,numVertices);
         end = getMicrotime();
+        free(vetorMarcacao);
+        somaTempo += end-start;
         fprintf(s,"%d %ld\r\n",i+1,end-start);
 //        printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
@@ -204,8 +207,47 @@ void gerarArquivoTempoListaAdjacencia(Vertice *vetorVertice, int numVertices, ch
         start = getMicrotime();
         vetorMarcacao = DFSListaAdjacencia(vetorVertice,1,numVertices);
         end = getMicrotime();
+        free(vetorMarcacao);
+        somaTempo += end-start;
         fprintf(s,"%d %ld\r\n",i+1,end-start);
 //        printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
+        }
+    }else{
+        fprintf(s,"Erro ao inserir o tipo de Busca. Tipos Validos: 0 (BFS) ou 1(DFS)\r\n");
+        printf("Erro ao inserir o tipo de Busca. Tipos Validos: 0 (BFS) ou 1(DFS)\n");
+    }
+
+    fclose(s);
+    printf("Tempo Media: %.2f",(float)somaTempo/1000);
+}
+
+void gerarArquivoTempoMatriz(char **MatrizVertice, int numVertices, char* nomeArquivo, int tipo){
+    long start,end;
+    int i;
+    int *vetorMarcacao;
+
+    FILE* s = fopen(nomeArquivo, "wb");
+    fprintf(s,"Ciclo Tempo\r\n");
+    if(tipo==0){
+        for(i=0;i<1000;i++){
+//          printf("%d\n",i+1);
+            start = getMicrotime();
+            vetorMarcacao = BFSMatriz(MatrizVertice,1,numVertices);
+            end = getMicrotime();
+            free(vetorMarcacao);
+            fprintf(s,"%d %ld\r\n",i+1,end-start);
+//          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
+        }
+    }
+    else if(tipo==1){
+        for(i=0;i<1000;i++){
+//          printf("%d\n",i+1);
+            start = getMicrotime();
+            vetorMarcacao = DFSMatriz(MatrizVertice,1,numVertices);
+            end = getMicrotime();
+            free(vetorMarcacao);
+            fprintf(s,"%d %ld\r\n",i+1,end-start);
+//          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
     }else{
         fprintf(s,"Erro ao inserir o tipo de Busca. Tipos Validos: 0 (BFS) ou 1(DFS)\r\n");
@@ -288,7 +330,7 @@ int main()
     scanf("%c",&escolha);
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("as_graph.txt", "rt");// ArqTeste   as_graph   dblp     live_journal
+    arq = fopen("dblp.txt", "rt");// ArqTeste   as_graph   dblp     live_journal
     if (arq == NULL)  // Se houve erro na abertura
     {
         printf("Problemas na abertura do arquivo\n");
@@ -332,8 +374,9 @@ int main()
 //    for(i = 0; i < numVertices; i++){
 //        printf("Vetor %d -> %d\n",i+1,vetorMarcacao[i]);
 //    }
-    componenteConexa(vetorVertice,numVertices);
-//    gerarArquivoTempoListaAdjacencia(vetorVertice, numVertices, "DFS_ListaAdjacencia.txt",1); // 0(BFS) ou 1(DFS)
+//    componenteConexa(vetorVertice,numVertices);
+    gerarArquivoTempoListaAdjacencia(vetorVertice, numVertices, "BFS_ListaAdjacencia.txt",0); // 0(BFS) ou 1(DFS)
+//    gerarArquivoTempoMatriz(MatrizVertice, numVertices, "BFS_Matriz.txt",0);
 
     mergeSort(vetorGraus,0,numVertices-1);
     gMax = vetorGraus[numVertices-1];

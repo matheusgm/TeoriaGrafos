@@ -1,52 +1,66 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N 50
+/* nó da lista para armazenar valores reais */
+typedef struct no No;
+struct no {
+    int info;
+    No *prox;
+};
 
 typedef struct pilha Pilha;
 struct pilha{
-    int n;
-    int vet[N];
+    No* prim;
 };
 
 Pilha* pilha_cria(){
     Pilha* p = (Pilha*) malloc(sizeof(Pilha));
-    if(p==NULL){
-        exit(1);
+    if (p==NULL) {
+       exit(1);
     }
-    p->n = 0; /* inicializa com zero elementos */
+    p->prim = NULL;
     return p;
 }
 
 void pilha_push(Pilha* p, int v){
-    if(p->n == N){
-        printf("Capacidade da pilha estourou!\n");
+    No* n = (No*) malloc(sizeof(No));
+    if (n==NULL) {
         exit(1);
     }
-    /* insere elemento na proxima posição */
-    p->vet[p->n] = v;
-    p->n++;
+    n->info = v;
+    n->prox = p->prim;
+    p->prim = n;
 }
 
 int pilha_vazia(Pilha* p){
-    return p->n = 0;
+    if(p->prim == NULL){
+        return 1;
+    }
+    return 0;
 }
 
 int pilha_pop(Pilha* p){
+    No* t;
     int v;
-    if(pilha_vazia(p)){
-        printf("Pilha Vazia!\n");
-        exit(1);
+    if (pilha_vazia(p)) {
+        exit(1); /* aborta programa */
     }
-    /* retira elemento do topo */
-    v = p->vet[p->n-1];
-    p->n--;
+    t = p->prim;
+    v = t->info;
+    p->prim = t->prox;
+    free(t);
     return v;
 }
 
 void pilha_libera(Pilha* p){
+    No *t, *q = p->prim;
+    while (q!=NULL)
+    {
+        t = q->prox;
+        free(q);
+        q = t;
+    }
     free(p);
-    return;
 }
 
 
