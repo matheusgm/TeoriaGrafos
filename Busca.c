@@ -98,7 +98,7 @@ int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam){
             }
         }
     }
-    gerarArquivoArvore(vetorArvore,tam);
+//    gerarArquivoArvore(vetorArvore,tam);
     free(vetorArvore);
 //    free(vetorMarcacao);
     return vetorMarcacao;
@@ -130,7 +130,7 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam){
             }
         }
     }
-    gerarArquivoArvore(vetorArvore,tam);
+//    gerarArquivoArvore(vetorArvore,tam);
     free(vetorArvore);
     return vetorMarcacao;
 }
@@ -167,7 +167,7 @@ int* DFSMatriz(char **Grafo, int s, int tam){
 }
 
 void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcacao, int numMarcado){
-    int v,i;
+    int v;
     Elemento *p;
     Arvore *vetorArvore = malloc(tam*sizeof(Arvore));
 
@@ -189,9 +189,8 @@ void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcac
             }
         }
     }
-    gerarArquivoArvore(vetorArvore,tam);
+//    gerarArquivoArvore(vetorArvore,tam);
 //    free(vetorArvore);
-//    free(vetorMarcacao);
     return;
 }
 

@@ -33,7 +33,7 @@ void fila_insere(Fila *f, int v){
 }
 
 int fila_vazia(Fila *f){
-    return f->ini == NULL;
+    return f->fim == NULL;
 }
 
 int fila_retira(Fila *f){
