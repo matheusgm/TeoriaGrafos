@@ -57,7 +57,7 @@ void milCiclosMatriz(char **MatrizVertice, int numVertices, char* nomeArquivo, i
 // ----------------------------------------------------- FIM CICLO 1000X -----------------------------------------------------
 
 // ----------------------------------------------------- OUTRAS FUNÇÕES -----------------------------------------------------
-void componenteConexa(Vertice *Grafo, int tam);
+void componenteConexa(Vertice *Grafo, int tam, int querImprimir);
 
 void gerarGraus(int* vetorGraus, int numVertices, int numArestas, char* nomeArqSaida);
 

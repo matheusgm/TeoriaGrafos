@@ -289,6 +289,7 @@ int* BFSMatriz(char **Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore, tam);
+    free(vetorArvore);
     return vetorMarcacao;
 }
 
@@ -319,6 +320,7 @@ int* BFSMatrizBYTE(char **Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore, tam);
+    free(vetorArvore);
     return vetorMarcacao;
 }
 
@@ -354,7 +356,6 @@ int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam){
 
     gerarArquivoArvore(vetorArvore,tam);
     free(vetorArvore);
-//    free(vetorMarcacao);
     return vetorMarcacao;
 }
 
@@ -385,7 +386,7 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam){
             }
         }
     }
-//    gerarArquivoArvore(vetorArvore,tam);
+    gerarArquivoArvore(vetorArvore,tam);
     free(vetorArvore);
     return vetorMarcacao;
 }
@@ -419,6 +420,7 @@ int* DFSMatriz(char **Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore,tam);
+    free(vetorArvore);
     return vetorMarcacao;
 }
 
@@ -450,6 +452,7 @@ int* DFSMatrizBYTE(char **Grafo, int s, int tam){
         }
     }
     gerarArquivoArvore(vetorArvore,tam);
+    free(vetorArvore);
     return vetorMarcacao;
 }
 
@@ -607,7 +610,7 @@ void milCiclosMatriz(char **MatrizVertice, int numVertices, char* nomeArquivo, i
 // ----------------------------------------------------- FIM CICLO 1000X -----------------------------------------------------
 
 // ----------------------------------------------------- OUTRAS FUNÇÕES -----------------------------------------------------
-void componenteConexa(Vertice *Grafo, int tam){
+void componenteConexa(Vertice *Grafo, int tam, int querImprimir){
     int i,h,qntTotalConexo;
     int j = 1;
     int numVerticeComponenteConexa = 0;
@@ -658,22 +661,21 @@ void componenteConexa(Vertice *Grafo, int tam){
     // Ordena o vetor em ordem crescente do numero de quantidade de elemento de cada componente
     mergeSortStructEnd(vet,0,qntTotalConexo-1);
 
-//    printf("Imprimindo...\n");
+    if(querImprimir == 1){
+        printf("Imprimindo...\n");
     // Imprime o numero e a quantidade de vertices de cada componente
-//    for(i = qntTotalConexo - 1; i>=0; i--){
-//        printf("Total: %d \n",vet[i].qntMarcacao);
-//        for(h = 0; h < vet[i].qntMarcacao; h++){
-//            printf("%d ",vet[i].endereco[h].numVertice);
-//        }
-//        printf("\n");
-//    }
-        printf("Qnt Total Conexo: %d\n",qntTotalConexo);
-        printf("Maior Conexo: %d\n",vet[qntTotalConexo-1].qntMarcacao);
-        printf("Menor Conexo: %d\n",vet[0].qntMarcacao);
-//    for(i = 0; i< tam; i++){
-//        printf("%d -> ",vetorMarcacaoCC[i].numMarcacao);
-//    }
-//    printf("\n");
+        for(i = qntTotalConexo - 1; i>=0; i--){
+            printf("Total: %d \n",vet[i].qntMarcacao);
+            for(h = 0; h < vet[i].qntMarcacao; h++){
+                printf("%d ",vet[i].endereco[h].numVertice);
+            }
+            printf("\n");
+        }
+    }
+
+        printf("Qnt Total Componente Conexo: %d\n",qntTotalConexo);
+        printf("Maior Componente Conexo: %d\n",vet[qntTotalConexo-1].qntMarcacao);
+        printf("Menor Componente Conexo: %d\n",vet[0].qntMarcacao);
 
 }
 
@@ -703,6 +705,7 @@ int diametroGrafo(Vertice *Grafo, int tam ){
     int i,diametro;
 
     for(i=0;i<tam;i++){
+        printf("%d\n",i+1);
         diametro = BFSListaAdjacencia03(Grafo,i+1,tam);
         if(diametro > maiorDiametro){
             maiorDiametro = diametro;
