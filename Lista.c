@@ -45,7 +45,7 @@ Elemento* busca(Elemento *lst, int v){
 }
 
 void lst_libera(Elemento *lst){
-    Elemento *p;
+    Elemento *p = lst;
     while(p != NULL){
         Elemento *t = p->prox; /* guarda referencia para o proximo Elemento */
         free(p); /* libera a memoria apontada por p */
@@ -54,8 +54,8 @@ void lst_libera(Elemento *lst){
 }
 
 Elemento* proximaLista(Elemento *lst){
-    Elemento *p = lst->prox;
-    return p;
+    Elemento *p = lst;
+    return p->prox;
 }
 
 int getItem(Elemento *lst){

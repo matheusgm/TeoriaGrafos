@@ -39,14 +39,20 @@ struct endVetorPrincipal{
     int i,pri,seg,ultimoCaracter;
     Vertice *vetorVertice;
     Elemento *lst;
-
-    vetorVertice = malloc(numVertices * sizeof(Vertice));
-
+    char* cha;
+    vetorVertice = (Vertice*) malloc(numVertices * sizeof(Vertice));
     for(i = 0; i < numVertices; i++){
         vetorVertice[i].n = i+1;
         vetorVertice[i].adjancencia = lst_cria();
         vetorGraus[i] = 0;
     }
+
+    if(numVertices > 3500000){
+        cha = "	";
+    }else{
+        cha = " ";
+    }
+
     printf("Vertices: %d\n",numVertices);
     i = 0;
     while (!feof(arq))
@@ -59,11 +65,11 @@ struct endVetorPrincipal{
             result[ultimoCaracter] = '\0';
         }
 
-        pri = atoi(strtok(result," "));
-        seg = atoi(strtok('\0'," "));
+        pri = atoi(strtok(result,cha));
+        seg = atoi(strtok('\0',cha));
 
         if(pri > numVertices || seg > numVertices){
-            printf("Erro! %s com numero incorreto\n", result);
+//            printf("Erro! %s com numero incorreto\n", result);
             continue;
         }
 
@@ -177,31 +183,31 @@ void gerarArquivoTempoListaAdjacencia(Vertice *vetorVertice, int numVertices, ch
     long start,end;
     int i;
     int *vetorMarcacao;
-    long somaTempo = 0;
+    double somaTempo = 0;
 
     FILE* s = fopen(nomeArquivo, "wb");
     fprintf(s,"Ciclo Tempo\r\n");
     if(tipo==0){
         for(i=0;i<1000;i++){
-//          printf("%d\n",i+1);
+            printf("%d\n",i+1);
             start = getMicrotime();
             vetorMarcacao = BFSListaAdjacencia(vetorVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += end-start;
-            fprintf(s,"%d %ld\r\n",i+1,end-start);
+            somaTempo += (double) end-start;
+//            fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
     }
     else if(tipo==1){
         for(i=0;i<1000;i++){
-//          printf("%d\n",i+1);
+            printf("%d\n",i+1);
             start = getMicrotime();
             vetorMarcacao = DFSListaAdjacencia(vetorVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += end-start;
-            fprintf(s,"%d %ld\r\n",i+1,end-start);
+            somaTempo += (double) (end-start);
+//            fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
     }else{
@@ -210,14 +216,14 @@ void gerarArquivoTempoListaAdjacencia(Vertice *vetorVertice, int numVertices, ch
     }
 
     fclose(s);
-    printf("Tempo Media: %.2f\n",(float)somaTempo/1000);
+    printf("Tempo Medio: %.2f\n",somaTempo/1000);
 }
 // Executa, para Matriz, a BFS(0) ou DFS(1) 1000x exibindo o tempo media e gerando um arquivo com o tempo em cada ciclo
 void gerarArquivoTempoMatriz(char **MatrizVertice, int numVertices, char* nomeArquivo, int tipo){
     long start,end;
     int i;
     int *vetorMarcacao;
-    long somaTempo = 0;
+    double somaTempo = 0;
 
     FILE* s = fopen(nomeArquivo, "wb");
     fprintf(s,"Ciclo Tempo\r\n");
@@ -228,7 +234,7 @@ void gerarArquivoTempoMatriz(char **MatrizVertice, int numVertices, char* nomeAr
             vetorMarcacao = BFSMatriz(MatrizVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += end-start;
+            somaTempo += (double)end-start;
             fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
@@ -240,7 +246,7 @@ void gerarArquivoTempoMatriz(char **MatrizVertice, int numVertices, char* nomeAr
             vetorMarcacao = DFSMatriz(MatrizVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += end-start;
+            somaTempo += (double)end-start;
             fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
@@ -250,34 +256,45 @@ void gerarArquivoTempoMatriz(char **MatrizVertice, int numVertices, char* nomeAr
     }
 
     fclose(s);
-    printf("Tempo Media: %.2f\n",(float)somaTempo/1000);
+    printf("Tempo Media: %.2f\n",somaTempo/1000);
 }
 
 void componenteConexa(Vertice *Grafo, int tam){
-    int i,h,maxConexo;
+    int i,h,qntTotalConexo;
     int j = 1;
     int numVerticeComponenteConexa = 0;
-
+    printf("Iniciando Componente Conexa!\n");
     // Inicializa o Vetor de Marcação que contem o numero da marcação e o numero do vertice
     Marcacao2* vetorMarcacaoCC = (Marcacao2*) malloc(tam*sizeof(Marcacao2));
     for(i = 0; i < tam; i++){
         vetorMarcacaoCC[i].numMarcacao=0;
         vetorMarcacaoCC[i].numVertice=i+1;
     }
+    printf("Executando BFS!\n");
     // Executa a BFS varias vezes, marcando com o numero da componente conexa
     for(i = 0; i < tam; i++){
         if(vetorMarcacaoCC[i].numMarcacao == 0){
+//            printf("%d\n",i+1);
             BFSListaAdjacencia02(Grafo,i+1,tam,vetorMarcacaoCC,j);
             j++;
         }
     }
+    printf("Liberando Memoria!\n");
+    // Liberar Espaco do Grafo, pois só utilizaremos o vetor de marcação
+    for(i=0;i<tam;i++){
+        lst_libera(Grafo[i].adjancencia);
+    }
+    free(Grafo);
+
+    printf("1 MergeSort!\n");
     // Ordena o vetor de marcação em ordem crescente do numero da componente conexa
     mergeSortStruct(vetorMarcacaoCC,0,tam-1);
-    maxConexo = vetorMarcacaoCC[tam-1].numMarcacao;
+    qntTotalConexo = vetorMarcacaoCC[tam-1].numMarcacao;
 
+    printf("Guardando Endereco!\n");
     // Cria um vetor para guardar a quantidade de elementos de cada componente conexa e o
     // endereco do inicio da componente conexa no vetor de marcaçao
-    EndVetorPrincipal *vet = malloc(maxConexo*sizeof(EndVetorPrincipal));
+    EndVetorPrincipal *vet = malloc(qntTotalConexo*sizeof(EndVetorPrincipal));
     for(i = 0; i < tam; i++){
         if(i == 0 || vetorMarcacaoCC[i].numMarcacao != vetorMarcacaoCC[i-1].numMarcacao){
             vet[vetorMarcacaoCC[i].numMarcacao - 1].endereco = &(vetorMarcacaoCC[i]);
@@ -289,22 +306,47 @@ void componenteConexa(Vertice *Grafo, int tam){
         }
     }
 
+    printf("2 MergeSort!\n");
     // Ordena o vetor em ordem crescente do numero de quantidade de elemento de cada componente
-    mergeSortStructEnd(vet,0,maxConexo-1);
+    mergeSortStructEnd(vet,0,qntTotalConexo-1);
 
+//    printf("Imprimindo...\n");
     // Imprime o numero e a quantidade de vertices de cada componente
-    for(i = maxConexo - 1; i>=0; i--){
-        printf("Total: %d \n",vet[i].qntMarcacao);
-        for(h = 0; h < vet[i].qntMarcacao; h++){
-            printf("%d ",vet[i].endereco[h].numVertice);
-        }
-        printf("\n");
-    }
-
+//    for(i = qntTotalConexo - 1; i>=0; i--){
+//        printf("Total: %d \n",vet[i].qntMarcacao);
+//        for(h = 0; h < vet[i].qntMarcacao; h++){
+//            printf("%d ",vet[i].endereco[h].numVertice);
+//        }
+//        printf("\n");
+//    }
+        printf("Qnt Total Conexo: %d\n",qntTotalConexo);
+        printf("Maior Conexo: %d\n",vet[qntTotalConexo-1].qntMarcacao);
+        printf("Menor Conexo: %d\n",vet[0].qntMarcacao);
 //    for(i = 0; i< tam; i++){
 //        printf("%d -> ",vetorMarcacaoCC[i].numMarcacao);
 //    }
 //    printf("\n");
+
+}
+
+void gerarGraus(int* vetorGraus, int numVertices, int numArestas){
+
+    int gMax,gMin;
+    float gMedio, gMediana;
+
+    mergeSort(vetorGraus,0,numVertices-1);
+    gMax = vetorGraus[numVertices-1];
+    gMin = vetorGraus[0];
+
+    if(numVertices % 2 == 0){
+        gMediana = (float)(vetorGraus[(int)(numVertices/2)] + vetorGraus[(int)(numVertices/2) + 1])/2;
+    }else{
+        gMediana = (float)vetorGraus[(int)(numVertices/2)];
+    }
+
+    gMedio = (numArestas*2)/(float)numVertices;
+
+    gerarArquivoSaida(numVertices, numArestas, gMax, gMin, gMediana, gMedio);
 
 }
 
@@ -315,8 +357,6 @@ int main()
     char *result;
     int numVertices;
     int numArestas = 0;
-    int gMax,gMin;
-    float gMedio, gMediana;
     int *vetorGraus;
     Vertice *vetorVertice;
     char **MatrizVertice;
@@ -328,7 +368,7 @@ int main()
     scanf("%c",&escolha);
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("dblp.txt", "rt");// ArqTeste   as_graph   dblp     live_journal
+    arq = fopen("live_journal.txt", "rt");// ArqTeste   as_graph   dblp     live_journal
     if (arq == NULL)  // Se houve erro na abertura
     {
         printf("Problemas na abertura do arquivo\n");
@@ -338,7 +378,6 @@ int main()
     // Le a primeira linha para descobrir a quantidade de vertices totais
     result = fgets(Linha, NUMERO_LINHA-1, arq);
     result[strlen(result)-1] = '\0';
-
     numVertices = atoi(result); //transforma a string em inteiro
 
     vetorGraus = (int*) malloc(numVertices*sizeof(int));
@@ -361,7 +400,7 @@ int main()
     fclose(arq);
     system("pause");
 
-//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 1, numVertices);
+//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 5, numVertices);
 //
 //    vetorMarcacao = BFSMatriz(MatrizVertice, 1, numVertices);
 //
@@ -374,21 +413,9 @@ int main()
 //    }
 //    componenteConexa(vetorVertice,numVertices);
     gerarArquivoTempoListaAdjacencia(vetorVertice, numVertices, "DFS_ListaAdjacencia.txt",1); // 0(BFS) ou 1(DFS)
-//    gerarArquivoTempoMatriz(MatrizVertice, numVertices, "BFS_Matriz.txt",0);
+//    gerarArquivoTempoMatriz(MatrizVertice, numVertices, "DFS_Matriz.txt",1);
 
-    mergeSort(vetorGraus,0,numVertices-1);
-    gMax = vetorGraus[numVertices-1];
-    gMin = vetorGraus[0];
-
-    if(numVertices % 2 == 0){
-        gMediana = (float)(vetorGraus[(int)(numVertices/2)] + vetorGraus[(int)(numVertices/2) + 1])/2;
-    }else{
-        gMediana = (float)vetorGraus[(int)(numVertices/2)];
-    }
-
-    gMedio = (numArestas*2)/(float)numVertices;
-
-    gerarArquivoSaida(numVertices, numArestas, gMax, gMin, gMediana, gMedio);
+    gerarGraus(vetorGraus, numVertices,numArestas);
 
     printf("Tempo: %ld\n",end - start);
 

@@ -33,7 +33,7 @@ void gerarArquivoArvore(Arvore *arvore, int tam){
     for(i=0;i<tam;i++){
         if(arvore[i].pai == 0){
             fprintf(arqSaida,"Vertice: %d -> Nivel: %d -> Pai: Raiz\r\n",i+1,arvore[i].nivel);
-        }else{
+        }else if(arvore[i].pai != -1){
             fprintf(arqSaida,"Vertice: %d -> Nivel: %d -> Pai: %d\r\n",i+1,arvore[i].nivel,arvore[i].pai);
         }
     }
@@ -79,6 +79,8 @@ int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam){
     int *vetorMarcacao = malloc(tam*sizeof(int));
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorMarcacao[s-1]=1;
     vetorArvore[s-1].nivel = 0;
@@ -98,7 +100,8 @@ int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam){
             }
         }
     }
-//    gerarArquivoArvore(vetorArvore,tam);
+
+    gerarArquivoArvore(vetorArvore,tam);
     free(vetorArvore);
 //    free(vetorMarcacao);
     return vetorMarcacao;
@@ -190,7 +193,7 @@ void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcac
         }
     }
 //    gerarArquivoArvore(vetorArvore,tam);
-//    free(vetorArvore);
+    free(vetorArvore);
     return;
 }
 
