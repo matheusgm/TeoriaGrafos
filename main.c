@@ -23,13 +23,18 @@ int main()
     char **MatrizVertice;
     int *vetorMarcacao;
     char escolha;
+    char nomeArq[50];
     long start, end;
 
-    printf("Deseja escolher Matriz ou Lista? [M/L]");
-    scanf("%c",&escolha);
+    printf("Escolha o arquivo: ['as_graph.txt','dblp.txt','live_journal.txt']\n");
+    scanf(" %s",nomeArq);
+
+    printf("Deseja escolher Matriz ou Lista? [M/L] ");
+    scanf(" %c",&escolha);
+
 
     // Abre um arquivo TEXTO para LEITURA
-    arq = fopen("live_journal.txt", "rt");// ArqTeste   as_graph   dblp     live_journal
+    arq = fopen(nomeArq, "rt");// ArqTeste   as_graph   dblp     live_journal
     if (arq == NULL)  // Se houve erro na abertura
     {
         printf("Problemas na abertura do arquivo\n");
@@ -61,9 +66,9 @@ int main()
     fclose(arq);
     system("pause");
 
-//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 1, numVertices);
+//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 5, numVertices);
 //
-//    vetorMarcacao = BFSMatriz(MatrizVertice, 1, numVertices);
+//    vetorMarcacao = BFSMatriz(MatrizVertice, 5, numVertices);
 //
 //    vetorMarcacao = DFSListaAdjacencia(vetorVertice, 1, numVertices);
 //
@@ -71,11 +76,15 @@ int main()
 
 //    componenteConexa(vetorVertice,numVertices);
 
-//    milCiclosListaAdjacencia(vetorVertice, numVertices, "DFS_ListaAdjacencia.txt",1); // 0(BFS) ou 1(DFS)
+//    milCiclosListaAdjacencia(vetorVertice, numVertices, "BFS_ListaAdjacencia.txt",0); // 0(BFS) ou 1(DFS)
 //    milCiclosMatriz(MatrizVertice, numVertices, "DFS_Matriz.txt",1);
 
+//    int o;
+//    o = diametroGrafo(vetorVertice, numVertices);
+//    printf("Diametro: %d\n",o);
+
     // Calcula os Graus e gera o arquivo de Saida
-    gerarGraus(vetorGraus, numVertices,numArestas);
+    gerarGraus(vetorGraus, numVertices,numArestas,"Saida.txt");
 
     printf("Tempo para gerar o Grafo: %ld\n",end - start);
 

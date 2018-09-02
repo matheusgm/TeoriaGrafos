@@ -5,6 +5,7 @@
 #include "PilhaLista.h"
 #include "Lista.h"
 #include "FuncoesAuxiliares.h"
+#include "upperTriangleBitArray.h"
 
 #define NUMERO_LINHA 1000
 
@@ -54,6 +55,7 @@ Vertice* geraListaAdjacencia(FILE *arq,char *Linha,char *result, int numVertices
 
     printf("Vertices: %d\n",numVertices);
     i = 0;
+    int r=0;
     while (!feof(arq))
     {
         // Lê uma linha (inclusive com o '\n')
@@ -69,6 +71,7 @@ Vertice* geraListaAdjacencia(FILE *arq,char *Linha,char *result, int numVertices
 
         if(pri > numVertices || seg > numVertices){
 //            printf("Erro! %s com numero incorreto\n", result);
+            r++;
             continue;
         }
 
@@ -89,11 +92,58 @@ Vertice* geraListaAdjacencia(FILE *arq,char *Linha,char *result, int numVertices
         (*numArestas)++;
     }
 //    printf("Chegou Aqui\n");
-
+    printf("Linhas erradas: %d\n",r);
     return vetorVertice;
 }
 
 char** geraMatrizAdjacencia(FILE *arq,char *Linha,char *result, int numVertices, int *numArestas, int *vetorGraus){
+    char **MatrizVertice;
+    int i,pri,seg,ultimoCaracter,maxBytes;
+//    int j;
+    maxBytes =( (numVertices - 1)/8 + 1);
+
+    MatrizVertice = bitArrayCreator(numVertices,maxBytes);
+/*(char**) malloc(numVertices*sizeof(char*));*/
+    for(i = 0; i < numVertices; i++){
+        vetorGraus[i] = 0;
+        /*for(j = 0; j < numVertices; j++){
+            MatrizVertice[i][j] = '0';
+        }*/
+    }
+    i = 0;
+    while (!feof(arq))
+    {
+        // Lê uma linha (inclusive com o '\n')
+        result = fgets(Linha, NUMERO_LINHA-1, arq);  // o 'fgets' lê até NUMERO_LINHA caracteres ou até o '\n'
+        ultimoCaracter = strlen(result)-1;
+        // Verificar e tirar o \n caso exista
+        if(result[ultimoCaracter] == '\n'){
+            result[ultimoCaracter] = '\0';
+        }
+        // Transforma os numeros em inteiros
+        pri = atoi(strtok(result," "));
+        seg = atoi(strtok('\0'," "));
+
+        if(pri > numVertices || seg > numVertices){
+            printf("Erro! %s com numero incorreto\n", result);
+            continue;
+        }
+
+        /*MatrizVertice[pri-1][seg-1] = '1';
+        MatrizVertice[seg-1][pri-1] = '1';*/
+        addBit(MatrizVertice,pri,seg,numVertices);
+
+        vetorGraus[pri-1]++;
+        vetorGraus[seg-1]++;
+
+        i++;
+        (*numArestas)++;
+    }
+
+    return MatrizVertice;
+}
+
+char** geraMatrizAdjacenciaBYTE(FILE *arq,char *Linha,char *result, int numVertices, int *numArestas, int *vetorGraus){
     char **MatrizVertice;
     int i,j,pri,seg,ultimoCaracter;
 
@@ -141,7 +191,12 @@ char** geraMatrizAdjacencia(FILE *arq,char *Linha,char *result, int numVertices,
 
 // ----------------------------------------------------- INICIO DE IMPRIMIR GRAFOS -----------------------------------------------------
 // Imprime o Grafo na forma de Matriz
-void imprimeMatriz(int** MatrizVertice, int numVertices){
+
+void imprimeMatriz(char** MatrizVertice, int numVertices){
+     bitArrayPrint(MatrizVertice,numVertices);
+}
+
+void imprimeMatrizBYTE(char** MatrizVertice, int numVertices){
     int j,i;
     for(i = 0; i < numVertices; i++){
         for(j = 0; j< numVertices; j++){
@@ -185,9 +240,9 @@ void gerarArquivoArvore(Arvore *arvore, int tam){
 }
 
 // Gera um Arquivo de Saida com o Numero Total de Vertices, Numero Total de Arestas, Grau Maximo, Grau Minimo, Grau Medio e Mediana dos Graus
-void gerarArquivoSaida(int numeroVertice, int numArestas, int gMax, int gMin, float gMediana, float gMedio){
+void gerarArquivoSaida(int numeroVertice, int numArestas, int gMax, int gMin, float gMediana, float gMedio, char* nomeArqSaida){
     FILE *arqSaida;
-    if((arqSaida = fopen("Saida.txt", "wb")) == NULL)
+    if((arqSaida = fopen(nomeArqSaida, "wb")) == NULL)
     {
         printf("Erro na abertura do arquivo");
         exit(1);
@@ -208,6 +263,36 @@ void gerarArquivoSaida(int numeroVertice, int numArestas, int gMax, int gMin, fl
 // ----------------------------------------------------- INICIO DE BUSCA -----------------------------------------------------
 // BFS de Matriz
 int* BFSMatriz(char **Grafo, int s, int tam){
+    int v,i;
+    Arvore *vetorArvore = malloc(tam*sizeof(Arvore));
+    int *vetorMarcacao = malloc(tam*sizeof(int));
+    for(i = 0; i < tam; i++){
+        vetorMarcacao[i] = 0;
+    }
+    vetorMarcacao[s-1]=1;
+    vetorArvore[s-1].nivel = 0;
+    vetorArvore[s-1].pai = 0;
+    Fila *Q = fila_cria();
+    fila_insere(Q,s);
+    while(!fila_vazia(Q)){
+        v = fila_retira(Q);
+        for(i=1;i<=tam;i++){
+            int w = i;
+            if(getBit(Grafo,v,i,tam)){  // Verificar se é adjacente
+                if(vetorMarcacao[w-1]!=1){
+                    vetorMarcacao[w-1]=1;
+                    fila_insere(Q,w);
+                    vetorArvore[w-1].nivel = vetorArvore[v-1].nivel + 1;
+                    vetorArvore[w-1].pai = v;
+                }
+            }
+        }
+    }
+    gerarArquivoArvore(vetorArvore, tam);
+    return vetorMarcacao;
+}
+
+int* BFSMatrizBYTE(char **Grafo, int s, int tam){
     int v,i;
     Arvore *vetorArvore = malloc(tam*sizeof(Arvore));
     int *vetorMarcacao = malloc(tam*sizeof(int));
@@ -323,6 +408,37 @@ int* DFSMatriz(char **Grafo, int s, int tam){
             vetorMarcacao[v-1] = 1;
             for(i=1;i<=tam;i++){
                 int w = i;
+                if(getBit(Grafo,v,i,tam)){  // Verificar se é adjacente
+                    pilha_push(P,w);
+                    if(vetorMarcacao[w-1] != 1){
+                        vetorArvore[w-1].nivel = vetorArvore[v-1].nivel + 1;
+                        vetorArvore[w-1].pai = v;
+                    }
+                }
+            }
+        }
+    }
+    gerarArquivoArvore(vetorArvore,tam);
+    return vetorMarcacao;
+}
+
+int* DFSMatrizBYTE(char **Grafo, int s, int tam){
+    int v,i;
+    Pilha *P = pilha_cria();
+    Arvore *vetorArvore = malloc(tam*sizeof(Arvore));
+    int *vetorMarcacao = malloc(tam*sizeof(int));
+    for(i = 0; i < tam; i++){
+        vetorMarcacao[i] = 0;
+    }
+    vetorArvore[s-1].nivel = 0;
+    vetorArvore[s-1].pai = 0;
+    pilha_push(P,s);
+    while(!pilha_vazia(P)){
+        v = pilha_pop(P);
+        if(vetorMarcacao[v-1] != 1){
+            vetorMarcacao[v-1] = 1;
+            for(i=1;i<=tam;i++){
+                int w = i;
                 if(Grafo[v-1][i-1]=='1'){  // Verificar se é adjacente
                     pilha_push(P,w);
                     if(vetorMarcacao[w-1] != 1){
@@ -365,6 +481,45 @@ void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcac
     free(vetorArvore);
     return;
 }
+
+int BFSListaAdjacencia03(Vertice *Grafo, int s, int tam){
+    int v,i;
+    int distancia = 0;
+    Elemento *p;
+    Arvore *vetorArvore = malloc(tam*sizeof(Arvore));
+    int *vetorMarcacao = malloc(tam*sizeof(int));
+    for(i = 0; i < tam; i++){
+        vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
+    }
+    vetorMarcacao[s-1]=1;
+    vetorArvore[s-1].nivel = 0;
+    vetorArvore[s-1].pai = 0;
+    Fila *Q = fila_cria();
+    fila_insere(Q,s);
+    while(!fila_vazia(Q)){
+        v = fila_retira(Q);
+        for(p = Grafo[v-1].adjancencia; p!= NULL; p=proximaLista(p)){
+            int w = getItem(p);
+            if(vetorMarcacao[w-1]==0){
+//                printf("%d\n",w);
+                vetorMarcacao[w-1]=1;
+                fila_insere(Q,w);
+                vetorArvore[w-1].nivel = vetorArvore[v-1].nivel + 1;
+                vetorArvore[w-1].pai = v;
+                if(vetorArvore[w-1].nivel > distancia){
+                    distancia = vetorArvore[w-1].nivel;
+                }
+            }
+        }
+    }
+
+//    gerarArquivoArvore(vetorArvore,tam);
+    free(vetorArvore);
+    free(vetorMarcacao);
+    return distancia;
+}
 // ----------------------------------------------------- FIM DE BUSCA -----------------------------------------------------
 
 // ----------------------------------------------------- INICIO CICLO 1000X -----------------------------------------------------
@@ -373,7 +528,7 @@ void milCiclosListaAdjacencia(Vertice *vetorVertice, int numVertices, char* nome
     long start,end;
     int i;
     int *vetorMarcacao;
-    double somaTempo = 0;
+//    double somaTempo = 0;
 
     FILE* s = fopen(nomeArquivo, "wb");
     fprintf(s,"Ciclo Tempo\r\n");
@@ -384,8 +539,8 @@ void milCiclosListaAdjacencia(Vertice *vetorVertice, int numVertices, char* nome
             vetorMarcacao = BFSListaAdjacencia(vetorVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += (double) end-start;
-//            fprintf(s,"%d %ld\r\n",i+1,end-start);
+//            somaTempo += (double) end-start;
+            fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
     }
@@ -396,8 +551,8 @@ void milCiclosListaAdjacencia(Vertice *vetorVertice, int numVertices, char* nome
             vetorMarcacao = DFSListaAdjacencia(vetorVertice,1,numVertices);
             end = getMicrotime();
             free(vetorMarcacao);
-            somaTempo += (double) (end-start);
-//            fprintf(s,"%d %ld\r\n",i+1,end-start);
+//            somaTempo += (double) (end-start);
+            fprintf(s,"%d %ld\r\n",i+1,end-start);
 //          printf("Ciclo: %d -> %ld\r\n",i+1,end-start);
         }
     }else{
@@ -406,7 +561,7 @@ void milCiclosListaAdjacencia(Vertice *vetorVertice, int numVertices, char* nome
     }
 
     fclose(s);
-    printf("Tempo Medio: %.2f\n",somaTempo/1000);
+//    printf("Tempo Medio: %.2f\n",somaTempo/1000);
 }
 
 // Executa, para Matriz, a BFS(0) ou DFS(1) 1000x exibindo o tempo media e gerando um arquivo com o tempo em cada ciclo
@@ -522,7 +677,7 @@ void componenteConexa(Vertice *Grafo, int tam){
 
 }
 
-void gerarGraus(int* vetorGraus, int numVertices, int numArestas){
+void gerarGraus(int* vetorGraus, int numVertices, int numArestas, char* nomeArqSaida){
 
     int gMax,gMin;
     float gMedio, gMediana;
@@ -539,9 +694,21 @@ void gerarGraus(int* vetorGraus, int numVertices, int numArestas){
 
     gMedio = (numArestas*2)/(float)numVertices;
 
-    gerarArquivoSaida(numVertices, numArestas, gMax, gMin, gMediana, gMedio);
+    gerarArquivoSaida(numVertices, numArestas, gMax, gMin, gMediana, gMedio, nomeArqSaida);
 
 }
 
+int diametroGrafo(Vertice *Grafo, int tam ){
+    int maiorDiametro = 0;
+    int i,diametro;
 
+    for(i=0;i<tam;i++){
+        diametro = BFSListaAdjacencia03(Grafo,i+1,tam);
+        if(diametro > maiorDiametro){
+            maiorDiametro = diametro;
+        }
+    }
+    return maiorDiametro;
+
+}
 

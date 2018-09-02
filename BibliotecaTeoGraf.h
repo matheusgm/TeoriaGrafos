@@ -8,11 +8,14 @@ typedef struct endVetorPrincipal EndVetorPrincipal;
 Vertice* geraListaAdjacencia(FILE *arq,char *Linha,char *result, int numVertices, int *numArestas, int *vetorGraus);
 
 char** geraMatrizAdjacencia(FILE *arq,char *Linha,char *result, int numVertices, int *numArestas, int *vetorGraus);
+
+char** geraMatrizAdjacenciaBYTE(FILE *arq,char *Linha,char *result, int numVertices, int *numArestas, int *vetorGraus);
 // ----------------------------------------------------- FIM DE GERAR GRAFOS -----------------------------------------------------
 
 // ----------------------------------------------------- INICIO DE IMPRIMIR GRAFOS -----------------------------------------------------
 // Imprime o Grafo na forma de Matriz
 void imprimeMatriz(int** MatrizVertice, int numVertices);
+void imprimeMatrizBYTE(int** MatrizVertice, int numVertices);
 
 // Imprime o Grafo na forma de Lista de Adjacencia
 void imprimeListaAdjacencia(Vertice *vetorVertice, int numVertices);
@@ -23,12 +26,13 @@ void imprimeListaAdjacencia(Vertice *vetorVertice, int numVertices);
 void gerarArquivoArvore(Arvore *arvore, int tam);
 
 // Gera um Arquivo de Saida com o Numero Total de Vertices, Numero Total de Arestas, Grau Maximo, Grau Minimo, Grau Medio e Mediana dos Graus
-void gerarArquivoSaida(int numeroVertice, int numArestas, int gMax, int gMin, float gMediana, float gMedio);
+void gerarArquivoSaida(int numeroVertice, int numArestas, int gMax, int gMin, float gMediana, float gMedio, char* nomeArqSaida);
 // ----------------------------------------------------- FIM ARQUIVOS DE SAIDA -----------------------------------------------------
 
 // ----------------------------------------------------- INICIO DE BUSCA -----------------------------------------------------
 // BFS de Matriz
 int* BFSMatriz(char **Grafo, int s, int tam);
+int* BFSMatrizBYTE(char **Grafo, int s, int tam);
 
 // BFS de Lista de Adjacencia
 int* BFSListaAdjacencia(Vertice *Grafo, int s, int tam);
@@ -38,6 +42,7 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam);
 
 // DFS de Matriz
 int* DFSMatriz(char **Grafo, int s, int tam);
+int* DFSMatrizBYTE(char **Grafo, int s, int tam);
 
 // BFS de Lista de Adjacencia para utilizar na busca de Componentes Conexos
 void BFSListaAdjacencia02(Vertice *Grafo, int s, int tam, Marcacao2* vetorMarcacao, int numMarcado);
@@ -54,8 +59,8 @@ void milCiclosMatriz(char **MatrizVertice, int numVertices, char* nomeArquivo, i
 // ----------------------------------------------------- OUTRAS FUNÇÕES -----------------------------------------------------
 void componenteConexa(Vertice *Grafo, int tam);
 
-void gerarGraus(int* vetorGraus, int numVertices, int numArestas);
+void gerarGraus(int* vetorGraus, int numVertices, int numArestas, char* nomeArqSaida);
 
-
+int diametroGrafo(Vertice *Grafo, int tam );
 
 
