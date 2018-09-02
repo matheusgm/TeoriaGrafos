@@ -12,7 +12,7 @@ struct endVetorPrincipal{
     int qntMarcacao;
     Marcacao2* endereco;
 };
-
+// Merge Sort para um vetor de inteiros
 // Merges two subarrays of arr[].
 // First subarray is arr[l..m]
 // Second subarray is arr[m+1..r]
@@ -94,7 +94,7 @@ long getMicrotime(){
 	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
 }
 
-
+// Merge Sort para um vetor com a struct "Marcacao2"
 void mergeStruct(Marcacao2 arr[], int l, int m, int r)
 {
     int i, j, k;
@@ -155,7 +155,7 @@ void mergeSortStruct(Marcacao2 *arr, int l, int r)
     }
 }
 
-
+// Merge Sort para um vetor com a struct "EndVetorPrincipal"
 void mergeStructEnd(EndVetorPrincipal arr[], int l, int m, int r)
 {
     int i, j, k;
