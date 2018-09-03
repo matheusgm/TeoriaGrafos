@@ -268,6 +268,8 @@ int* BFSMatriz(char **Grafo, int s, int tam){
     int *vetorMarcacao = malloc(tam*sizeof(int));
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorMarcacao[s-1]=1;
     vetorArvore[s-1].nivel = 0;
@@ -299,6 +301,8 @@ int* BFSMatrizBYTE(char **Grafo, int s, int tam){
     int *vetorMarcacao = malloc(tam*sizeof(int));
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorMarcacao[s-1]=1;
     vetorArvore[s-1].nivel = 0;
@@ -368,6 +372,8 @@ int* DFSListaAdjacencia(Vertice *Grafo, int s, int tam){
     Elemento *p;
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorArvore[s-1].nivel = 0;
     vetorArvore[s-1].pai = 0;
@@ -399,6 +405,8 @@ int* DFSMatriz(char **Grafo, int s, int tam){
     int *vetorMarcacao = malloc(tam*sizeof(int));
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorArvore[s-1].nivel = 0;
     vetorArvore[s-1].pai = 0;
@@ -431,6 +439,8 @@ int* DFSMatrizBYTE(char **Grafo, int s, int tam){
     int *vetorMarcacao = malloc(tam*sizeof(int));
     for(i = 0; i < tam; i++){
         vetorMarcacao[i] = 0;
+        vetorArvore[i].nivel = -1;
+        vetorArvore[i].pai = -1;
     }
     vetorArvore[s-1].nivel = 0;
     vetorArvore[s-1].pai = 0;

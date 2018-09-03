@@ -25,7 +25,7 @@ int main()
     char escolha;
     char nomeArq[50];
     long start, end;
-	int o;
+    int maiorDiametro;
 
     printf("Escolha o arquivo: ['as_graph.txt','dblp.txt','live_journal.txt']\n");
     scanf(" %s",nomeArq);
@@ -67,25 +67,25 @@ int main()
     printf("Tempo para gerar o Grafo: %ld us\n",end - start);
     system("pause");
 
-//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 5, numVertices);
+//    vetorMarcacao = BFSListaAdjacencia(vetorVertice, 1, numVertices);
 //
 //    vetorMarcacao = BFSMatriz(MatrizVertice, 5, numVertices);
 //
-//    vetorMarcacao = DFSListaAdjacencia(vetorVertice, 1, numVertices);
+//    vetorMarcacao = DFSListaAdjacencia(vetorVertice, 3, numVertices);
 //
-//    vetorMarcacao = DFSMatriz(MatrizVertice, 1, numVertices);
+//    vetorMarcacao = DFSMatriz(MatrizVertice, 5, numVertices);
 
 //    componenteConexa(vetorVertice,numVertices,0); // Terceiro parametro: 1 (Imprime as CC) e 0 (Nao Imprime as CC)
 
 //    milCiclosListaAdjacencia(vetorVertice, numVertices, "BFS_ListaAdjacencia.txt",0); // 0(BFS) ou 1(DFS)
 //    milCiclosMatriz(MatrizVertice, numVertices, "DFS_Matriz.txt",1);
 
-    
-    start = getMicrotime();
-    o = diametroGrafo(vetorVertice, numVertices);
-    end = getMicrotime();
-    printf("Diametro: %d\n",o);
-    printf("Tempo para calcular o Diametro: %ld us\n",end - start);
+
+//    start = getMicrotime();
+//    maiorDiametro = diametroGrafo(vetorVertice, numVertices);
+//    end = getMicrotime();
+//    printf("Diametro: %d\n",maiorDiametro);
+//    printf("Tempo para calcular o Diametro: %ld us\n",end - start);
 
     // Calcula os Graus e gera o arquivo de Saida
     gerarGraus(vetorGraus, numVertices,numArestas,"Saida.txt");
