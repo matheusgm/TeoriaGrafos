@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/* nó da lista para armazenar valores reais */
+/* nÃ³ da lista para armazenar valores reais */
 typedef struct lista Lista;
 struct lista {
     int info;
@@ -22,9 +22,9 @@ Fila* fila_cria(){
 
 void fila_insere(Fila *f, int v){
     Lista* n = (Lista*) malloc(sizeof(Lista));
-    n->info = v; /* armazena informação */
-    n->prox = NULL; /* novo nó passa a ser o último */
-    if (f->fim != NULL){ /* verifica se lista não estava vazia */
+    n->info = v; /* armazena informaÃ§Ã£o */
+    n->prox = NULL; /* novo nÃ³ passa a ser o Ãºltimo */
+    if (f->fim != NULL){ /* verifica se lista nÃ£o estava vazia */
         f->fim->prox = n;
     } else{ /* fila estava vazia */
         f->ini = n;
