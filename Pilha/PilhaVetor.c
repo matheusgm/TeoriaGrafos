@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/* nó da lista para armazenar valores reais */
+/* nÃ³ da lista para armazenar valores reais */
 typedef struct no No;
 struct no {
     int info;
