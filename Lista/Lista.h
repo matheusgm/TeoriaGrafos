@@ -1,18 +1,18 @@
 typedef struct elemento Elemento;
 
-/* FunÁ„o de criaÁ„o: retorna uma lista vazia */
+/* Fun√ß√£o de cria√ß√£o: retorna uma lista vazia */
 Elemento* lst_cria();
 
-/* InserÁ„o no inicio: retorna a lista atualizada */
+/* Inser√ß√£o no inicio: retorna a lista atualizada */
 Elemento* lst_insere(Elemento *lst, int val);
 
-/* funÁ„o imprime: imprime valores dos elementos */
+/* fun√ß√£o imprime: imprime valores dos elementos */
 void lst_imprime(Elemento *lst);
 
-/* funÁ„o vazia: retorna 1 se vazia ou 0 se n„o vazia */
+/* fun√ß√£o vazia: retorna 1 se vazia ou 0 se n√£o vazia */
 int lst_vazia(Elemento *lst);
 
-/* funÁ„o busca: busca um elemento na lista */
+/* fun√ß√£o busca: busca um elemento na lista */
 Elemento* busca(Elemento *lst, int v);
 
 void lst_libera(Elemento *lst);
