@@ -7,12 +7,12 @@ struct elemento{
     Elemento *prox;
 };
 
-/* Função de criação: retorna uma lista vazia */
+/* FunÃ§Ã£o de criaÃ§Ã£o: retorna uma lista vazia */
 Elemento* lst_cria(){
     return NULL;
 }
 
-/* Inserção no inicio: retorna a lista atualizada */
+/* InserÃ§Ã£o no inicio: retorna a lista atualizada */
 Elemento* lst_insere(Elemento *lst, int val){
     Elemento *novo = (Elemento*) malloc(sizeof(Elemento));
     novo->info = val;
@@ -20,7 +20,7 @@ Elemento* lst_insere(Elemento *lst, int val){
     return novo;
 }
 
-/* função imprime: imprime valores dos elementos */
+/* funÃ§Ã£o imprime: imprime valores dos elementos */
 void lst_imprime(Elemento *lst){
     Elemento *p;
     for(p = lst; p != NULL; p = p->prox){
@@ -28,12 +28,12 @@ void lst_imprime(Elemento *lst){
     }
 }
 
-/* função vazia: retorna 1 se vazia ou 0 se não vazia */
+/* funÃ§Ã£o vazia: retorna 1 se vazia ou 0 se nÃ£o vazia */
 int lst_vazia(Elemento *lst){
     return lst == NULL;
 }
 
-/* função busca: busca um elemento na lista */
+/* funÃ§Ã£o busca: busca um elemento na lista */
 Elemento* busca(Elemento *lst, int v){
     Elemento *p;
     for(p = lst; p!= NULL; p=p->prox){
